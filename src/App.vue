@@ -7,8 +7,12 @@ let showModal = ref(false)
 const newNote = ref("")
 
 const notes = ref([])
+const errorMessage = ref("")
 
 const addNote = () => {
+  if(newNote.value.length < 10){
+    return errorMessage.value = "En az 10 karakter girilmelidir."
+  }
   notes.value.push({
     id: Math.floor(Math.random() * 100000),
     text: newNote.value,
@@ -17,6 +21,7 @@ const addNote = () => {
   })
   showModal.value = false
   newNote.value = ""
+  errorMessage.value = ""
 }
 
 const getRandomColor = () => {
@@ -30,8 +35,8 @@ const getRandomColor = () => {
   <main>
     <div v-if="showModal" class="overlay">
       <div class="modal">
-        
-        <textarea v-model="newNote" name="note" id="note" cols="30" rows="10"></textarea>
+        <textarea v-model.trim="newNote" name="note" id="note" cols="30" rows="10"></textarea>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
         <button @click="addNote">Add Note</button>
         <button @click="showModal = false" class="close">Close</button>
       </div>
